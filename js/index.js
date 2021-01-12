@@ -15,8 +15,10 @@
 
 // Selectors
 const docBody        = document.querySelector('body'),
+      navItems       = [...document.querySelectorAll('.nav-link')],
       heroBannerImg  = document.querySelector('.intro img'),
       pageTitle      = document.querySelector('.intro h2'),
+      contentSection = document.querySelector('.content-destination'),
       allH2s         = [...document.querySelectorAll('h2')],
       allH4s         = [...document.querySelectorAll('h4')],
       allParagraphs  = [...document.querySelectorAll('p')],
@@ -25,15 +27,11 @@ const docBody        = document.querySelector('body'),
       footer         = document.querySelector('.footer p');
 
 // Helper Functions
-function borderRadius(e) {
-  if (e.target.style.borderRadius === "20px") {
-    e.target.style.borderRadius = null;  
-  } else {
-    e.target.style.borderRadius = "20px";
-  }
+function resizePrint(e) {
+  console.log("Height: " + e.target.innerHeight, "\n", "Width: " + e.target.innerWidth);
 }
 
-function backquote(e) {
+function darkMode(e) {
   if (e.key === "`" && docBody.style.backgroundColor === "") {
     docBody.style.backgroundColor = "black";
     allParagraphs.map(p => p.style.color = "white");
@@ -46,6 +44,22 @@ function backquote(e) {
     allH2s.map(h => h.style.color = "black");
     allH4s.map(h => h.style.color = "black");
     footer.style.color = null;
+  }
+}
+
+function wheelMessage(e) {
+  console.log("Whoa there, that wheel is dizzying!!!");
+}
+
+function greetingMessage(e) {
+  console.log("Hello there, welcome to the site!");
+}
+
+function borderRadius(e) {
+  if (e.target.style.borderRadius === "20px") {
+    e.target.style.borderRadius = null;  
+  } else {
+    e.target.style.borderRadius = "20px";
   }
 }
 
@@ -63,15 +77,45 @@ function copyAction(e) {
   e.preventDefault();
 }
 
-// Event Listeners
-document.addEventListener('keydown', backquote);
+function highlight(e) {
+  if (e.target.style.backgroundColor != "") {
+    e.target.style.backgroundColor = null;
+  } else {
+    e.target.style.backgroundColor = "#fffede";
+  }
+}
 
+function opaqueify(e) {
+  e.target.style.transition = "0.5s";
+  e.target.style.opacity = 0.5;
+}
+
+function deOpaqueify(e) {
+  e.target.style.opacity = 1;
+}
+
+function tripWin(e) {
+  e.stopPropagation();
+  alert("You've won a trip to Hawaii!");
+}
+
+// Event Listeners
+window.addEventListener('resize', resizePrint);
+document.addEventListener('keydown', darkMode);
+document.addEventListener('wheel', wheelMessage);
+
+heroBannerImg.addEventListener('load', greetingMessage);
 heroBannerImg.addEventListener('dblclick', borderRadius);
 
 allParagraphs.forEach(p => p.addEventListener('mouseenter', makeBold));
 allParagraphs.forEach(p => p.addEventListener('mouseleave', removeBold));
 allParagraphs.forEach(p => p.addEventListener('copy', copyAction));
+allParagraphs.forEach(p => p.addEventListener('click', highlight));
 
-// heroBannerImg.addEventListener('click', event => {
-//   console.log(event);
-// });
+destinationImg.addEventListener('mouseover', opaqueify);
+destinationImg.addEventListener('mouseleave', deOpaqueify);
+destinationImg.addEventListener('click', tripWin);
+
+navItems.forEach(link => link.addEventListener('click', e => e.preventDefault()));
+
+contentSection.addEventListener('click', e => console.log("Clicked on the content destination section"));
